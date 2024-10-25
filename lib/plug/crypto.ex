@@ -69,6 +69,15 @@ defmodule Plug.Crypto do
     other
   end
 
+  defp non_executable_terms(other) when is_function(other) do
+    if other == &Ecto.Type.empty_trimmed_string?/1 do
+      other
+    else
+      raise ArgumentError,
+            "cannot deserialize #{inspect(other)}, the term is not safe for deserialization"
+    end
+  end
+
   defp non_executable_terms(other) do
     raise ArgumentError,
           "cannot deserialize #{inspect(other)}, the term is not safe for deserialization"
